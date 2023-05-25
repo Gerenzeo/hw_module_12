@@ -1,7 +1,7 @@
 from datetime import datetime
 import random
 
-from logic import AddressBook, Record, ValidateBirthday, ValidatePhone
+from logic import AddressBook, Record, ValidateBirthday, ValidatePhone, ValidateBirthday, Birthday
 
 
 
@@ -81,21 +81,10 @@ def command_set_birthday(contacts: dict, name, birthday):
         raise KeyError(name)
     
     record = contacts[name]
+    print(record)
 
-    splitter = None
-    for char in birthday:
-        if char in ['.', '/', '-', ',', ' ']:
-            splitter = char
-            break
-
-    if splitter != None:
-        days, month, year = birthday.split(splitter)
-
-        birthday = datetime(day=int(days), month=int(month), year=int(year)).date()
-    else:
-        raise ValidateBirthday(birthday)
     
-    record.birthday = birthday
+    record.birthday = Birthday(birthday).normalize_birthday()
     contacts.add_record(record)
     return f'Birthday successfully set for user {str(name).title()}.'
 
