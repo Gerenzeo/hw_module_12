@@ -3,7 +3,10 @@ import random
 
 from logic import AddressBook, Record, ValidateBirthday, ValidatePhone
 
+
+
 CONTACTS = AddressBook()
+
 
 # DECORATOR
 def input_error(func):
@@ -35,6 +38,8 @@ def command_load(contacts: AddressBook):
     return ''
 
 def command_save(contacts: AddressBook):
+    if not contacts:
+        return ''
     contacts.serialize()
     return ''
 
@@ -55,6 +60,7 @@ def command_add_user(contacts: dict, name, *args):
         contacts.add_record(record)
         return f'User {name.title()} successfully added!'
 
+
 @input_error
 def command_add_phone(contacts: dict, name, phone):
     if name not in contacts:
@@ -67,6 +73,7 @@ def command_add_phone(contacts: dict, name, phone):
     record.add_phone(phone)
     contacts.add_record(record)
     return f'Phone {phone} successfully added for user {str(name).title()}.'
+
 
 @input_error
 def command_set_birthday(contacts: dict, name, birthday):
@@ -109,7 +116,7 @@ def command_view_contacts(contacts: dict):
         for name in contacts.__next__():
             record = contacts[name]
             print(f'{record.name.value}')
-            print(f'   Phones: {", ".join([phone for phone in record.phones])}')
+            print(f'   Phones: {", ".join([p.phone for p in record.phones])}')
             print(f'   Birthday: {record.birthday}')
             print('---------')
         return ''
@@ -163,17 +170,11 @@ def command_generate_contacts(contacts: dict, count_contacts):
     
     return ''
 
-def command_show_all(contacts: dict):
-    print(len(contacts))
-    for s in contacts:
-        for key, value in s.items():
 
-            print(f'Name: {value.name.value}')
-            print(f'Phones: {",".join([number for number in value.phones])}')
-            print(f'Birthday: {value.birthday}')
-            print('---------')
-    
+def command_show_all(contacts: AddressBook):
+    print(contacts.show_all())
     return ''
+
 
 def command_unknown(command):
     return f'Command [{command}] is not exist!'
